@@ -1,0 +1,18 @@
+.divider {
+  display: flex;
+  color: #c1ebfc;
+  align-items: center;
+
+  .separator {
+    height: 8px;
+    width: 50%;
+    border-radius: 4px;
+    background-color: #c1ebfc;
+  }
+
+  .divider-text {
+    font-size: 2.5rem;
+    margin: 0 20px;
+    transform: translateY(-10%);
+  }
+}

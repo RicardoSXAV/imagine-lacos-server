@@ -1,0 +1,39 @@
+{
+  "name": "api",
+  "version": "1.0.0",
+  "description": "",
+  "main": "app.js",
+  "scripts": {
+    "start": "nodemon src/app.js",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "@sendgrid/mail": "^7.4.5",
+    "axios": "^0.21.1",
+    "bcrypt": "^5.0.1",
+    "cookie-parser": "^1.4.5",
+    "cors": "^2.8.5",
+    "crypto": "^1.0.1",
+    "dotenv": "^10.0.0",
+    "express": "^4.17.1",
+    "express-validator": "^6.12.0",
+    "gn-api-sdk-node": "^2.0.5",
+    "google-auth-library": "^7.2.0",
+    "jsonwebtoken": "^8.5.1",
+    "lodash": "^4.17.21",
+    "moment": "^2.29.1",
+    "mongoose": "^5.12.13",
+    "mongoose-aggregate-paginate-v2": "^1.0.42",
+    "multer": "^1.4.2",
+    "multer-storage-cloudinary": "^4.0.0",
+    "passport": "^0.4.1",
+    "passport-google-oauth2": "^0.2.0",
+    "uuid": "^8.3.2"
+  },
+  "devDependencies": {
+    "nodemon": "^2.0.7"
+  }
+}

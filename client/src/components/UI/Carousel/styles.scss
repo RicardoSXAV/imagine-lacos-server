@@ -1,0 +1,117 @@
+.carousel-space {
+  height: 50px;
+
+  @media (max-width: 1000px) {
+    height: 20px;
+  }
+}
+
+.carousel {
+  position: absolute;
+  width: 95%;
+
+  @media (max-width: 1000px) {
+    zoom: 0.9;
+    margin-top: 40px;
+  }
+
+  @media (max-width: 850px) {
+    zoom: 0.8;
+  }
+
+  #carousel-prev-button {
+    position: absolute;
+    z-index: 1;
+    top: 35%;
+  }
+
+  #carousel-next-button {
+    position: absolute;
+    z-index: 1;
+    left: 86%;
+    top: 35%;
+  }
+
+  .carousel-container {
+    position: relative;
+    display: flex;
+    text-align: center;
+
+    min-height: 200px;
+    max-width: min-content;
+
+    overflow-x: hidden;
+    scroll-behavior: smooth;
+
+    #carousel-card-delete {
+      position: absolute;
+      top: 60px;
+      left: 65%;
+
+      z-index: 2;
+    }
+
+    .carousel-card {
+      position: relative;
+      width: 100%;
+
+      h1 {
+        font-size: 2rem;
+        color: #34cfff;
+        position: absolute;
+        top: 80%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+      }
+
+      .carousel-card-large-text {
+        top: 75%;
+      }
+    }
+
+    .carousel-gradient {
+      position: relative;
+      margin: 40px;
+
+      transition: all 0.4s ease;
+
+      img {
+        border-radius: 95px;
+        height: 400px;
+        width: 400px;
+        object-fit: cover;
+      }
+
+      &:hover {
+        cursor: pointer;
+        filter: brightness(1.05);
+      }
+
+      &:active {
+        filter: contrast(0.9);
+      }
+
+      &::after {
+        border: 5px solid #8ba6ef;
+        border-radius: 95px;
+        content: "";
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 98%;
+        height: 96%;
+        background-image: linear-gradient(
+            180deg,
+            #ffffff 0%,
+            rgba(255, 255, 255, 0) 23.22%
+          ),
+          linear-gradient(
+            180.62deg,
+            rgba(255, 255, 255, 0) -4.75%,
+            #beeafc 109.9%
+          );
+        box-shadow: 0px 15px 20px 1px rgba(0, 0, 0, 0.25);
+      }
+    }
+  }
+}
