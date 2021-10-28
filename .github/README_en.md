@@ -11,7 +11,7 @@
 <h3 align="center">
   <a href="https://www.figma.com/file/EQarsX2XaixUfXgMY6gvTo/Imagine-La%C3%A7os?node-id=0%3A1">Figma Design</a> •
   <a href="">Production website</a> •
-  <a href="README.md">Portuguese README</a>
+  <a href="../README.md">Portuguese README</a>
 </h3>
 
 <div align="center">
