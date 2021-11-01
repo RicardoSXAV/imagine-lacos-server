@@ -3,10 +3,11 @@ import "./styles.scss";
 import { useEffect } from "react";
 import { useHistory } from "react-router-dom";
 
-import Button from "../../components/UI/Button";
 import Navbar from "../../components/Navbar";
-import Box from "../../components/UI/Box";
 import ProductCard from "../../components/ProductCard";
+import Pagination from "../../components/Pagination";
+import Button from "../../components/UI/Button";
+import Box from "../../components/UI/Box";
 
 function Categoria(props) {
   const category = props.categoryList.find(
@@ -14,7 +15,7 @@ function Categoria(props) {
   );
 
   useEffect(() => {
-    window.scrollTo(0, 0)
+    window.scrollTo(0, 0);
     props.getCategoryProducts(category.name);
 
     return () => props.setFilteredProductList([]);
@@ -42,28 +43,37 @@ function Categoria(props) {
           {/* <Image name="pulseira.jpg" /> */}
         </div>
       </div>
-
-      <Box id="category-products-box">
-        <div className="products-list">
-          {props.filteredProductList?.map((product) => (
-            <ProductCard
-              title={product.name}
-              category={product.category}
-              price={product.price}
-              id={product.id}
-              addToCart={props.addToCart}
-            >
-              <img
-                src={product.images[0]}
-                alt=""
-                onClick={() =>
-                  history.push(`/produto/${product.name.replace(/\s+/g, "-")}`)
-                }
-              />
-            </ProductCard>
-          ))}
-        </div>
-      </Box>
+      <div className="category-page-container">
+        <Box id="category-products-box">
+          <div className="products-list">
+            {props.filteredProductList?.map((product) => (
+              <ProductCard
+                title={product.name}
+                category={product.category}
+                price={product.price}
+                id={product.id}
+                addToCart={props.addToCart}
+              >
+                <img
+                  src={product.images[0]}
+                  alt=""
+                  onClick={() =>
+                    history.push(
+                      `/produto/${product.name.replace(/\s+/g, "-")}`
+                    )
+                  }
+                />
+              </ProductCard>
+            ))}
+          </div>
+        </Box>
+        {console.log(props.categoryPaginationInfo)}
+        <Pagination
+          totalPages={props.categoryPaginationInfo.totalPages}
+          currentPage={props.currentCategoryProductPage}
+          setCurrentPage={props.setCurrentCategoryProductPage}
+        />
+      </div>
     </div>
   );
 }

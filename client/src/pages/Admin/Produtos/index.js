@@ -90,7 +90,7 @@ function Produtos(props) {
       </FormWindow>
 
       <div>
-        <Navbar admin />
+        <Navbar admin userData={props.userData} />
         <Button onClick={() => setShowWindow(true)}>
           Adicionar um produto
         </Button>

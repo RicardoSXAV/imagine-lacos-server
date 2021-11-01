@@ -34,10 +34,13 @@ function App() {
   const [productList, setProductList] = useSessionStorage([], "productList");
   const [productsFilter, setProductsFilter] = useState("Recentes");
   const [currentProductPage, setCurrentProductPage] = useSessionStorage(1);
+  const [currentCategoryProductPage, setCurrentCategoryProductPage] =
+    useState(1);
   const [paginationInfo, setPaginationInfo] = useSessionStorage(
     {},
     "paginationInfo"
   );
+  const [categoryPaginationInfo, setCategoryPaginationInfo] = useState({});
   const [filteredProductList, setFilteredProductList] = useSessionStorage(
     [],
     "filteredProductList"
@@ -119,8 +122,16 @@ function App() {
   async function getCategoryProducts(categoryName) {
     if (filteredProductList.length === 0) {
       await axios
-        .get(`http://localhost:5000/api/product?category=${categoryName}`)
-        .then((response) => setFilteredProductList(response.data.events))
+        .get(
+          `http://localhost:5000/api/product?category=${categoryName}&page=${currentCategoryProductPage}`
+        )
+        .then((response) => {
+          console.log(response.data);
+          setFilteredProductList(response.data.events);
+          setCategoryPaginationInfo({
+            totalPages: response.data.totalPages,
+          });
+        })
         .catch((error) => console.log(error.response));
     }
   }
@@ -303,6 +314,9 @@ function App() {
               filteredProductList={filteredProductList}
               setFilteredProductList={setFilteredProductList}
               getCategoryProducts={getCategoryProducts}
+              categoryPaginationInfo={categoryPaginationInfo}
+              currentCategoryProductPage={currentCategoryProductPage}
+              setCurrentCategoryProductPage={setCurrentCategoryProductPage}
             />
           )}
         />
@@ -394,6 +408,7 @@ function App() {
                   productList={productList}
                   createProduct={createProduct}
                   removeProduct={removeProduct}
+                  userData={userData}
                 />
               )}
             />

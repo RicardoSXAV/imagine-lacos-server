@@ -142,7 +142,10 @@ function Home(props) {
                     <img
                       src={product.images[0]}
                       alt=""
-                      onClick={() => history.push(`/produto/${product._id}`)}
+                      onClick={() => {
+                        history.push(`/produto/${product._id}`);
+                        window.scrollTo(0, 0);
+                      }}
                     />
                   </ProductCard>
                 ))}
