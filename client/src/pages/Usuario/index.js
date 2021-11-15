@@ -10,6 +10,7 @@ import Button from "../../components/UI/Button";
 import Input from "../../components/UI/Input";
 
 import zipcodeFormat from "../../utils/zipcodeFormat";
+import AddPostalInformation from "../../components/Forms/AddPostalInformation";
 
 function Usuario(props) {
   const [showAddWindow, setShowAddWindow] = useState(false);
@@ -81,92 +82,24 @@ function Usuario(props) {
 
   return (
     <>
-      <Popup showPopup={showHelpPopup} setShowPopup={setShowHelpPopup}>
-        Precisa de ajuda?
+      <Popup
+        className="help-popup"
+        showPopup={showHelpPopup}
+        setShowPopup={setShowHelpPopup}
+      >
+        <Image name="conversation-ballon.png" />
+        Precisa de ajuda? Entre em contato conosco pelo Whatsapp!
+        <div className="popup-flex">
+          <Image name="whatsapp.svg" />
+          <h1>(61) 998631756</h1>
+        </div>
       </Popup>
 
-      <FormWindow
-        title="Adicionar dados postais"
-        showWindow={showAddWindow}
-        setShowWindow={setShowAddWindow}
-        handleSubmit={() =>
-          props.updateUserInformation({
-            postalInformation: {
-              street,
-              number,
-              neighborhood,
-              complement,
-              city,
-              state,
-              zipcode,
-              cpf,
-              birth,
-              phoneNumber,
-            },
-          })
-        }
-      >
-        <Input
-          type="text"
-          placeholder="Rua"
-          label="Nome da Rua"
-          onChange={(event) => setStreet(event.target.value)}
-        />
-        <Input
-          type="text"
-          placeholder="Número"
-          label="Número"
-          onChange={(event) => setNumber(event.target.value)}
-        />
-        <Input
-          type="text"
-          placeholder="Bairro"
-          label="Bairro"
-          onChange={(event) => setNeighborhood(event.target.value)}
-        />
-        <Input
-          type="text"
-          placeholder="Complemento"
-          label="Complemento"
-          onChange={(event) => setComplement(event.target.value)}
-        />
-        <Input
-          type="text"
-          placeholder="Cidade"
-          label="Cidade"
-          onChange={(event) => setCity(event.target.value)}
-        />
-        <Input
-          type="text"
-          placeholder="Estado"
-          label="Estado"
-          onChange={(event) => setState(event.target.value)}
-        />
-        <Input
-          type="text"
-          placeholder="CEP"
-          label="CEP"
-          onChange={(event) => setZipcode(event.target.value)}
-        />
-        <Input
-          type="text"
-          placeholder="CPF"
-          label="CPF"
-          onChange={(event) => setCpf(event.target.value)}
-        />
-        <Input
-          type="text"
-          placeholder="Data de Nascimento"
-          label="Data de Nascimento"
-          onChange={(event) => setBirth(event.target.value)}
-        />
-        <Input
-          type="text"
-          placeholder="Número de Telefone"
-          label="Número de Telefone"
-          onChange={(event) => setPhoneNumber(event.target.value)}
-        />
-      </FormWindow>
+      <AddPostalInformation
+        showAddWindow={showAddWindow}
+        setShowAddWindow={setShowAddWindow}
+        updateUserInformation={props.updateUserInformation}
+      />
 
       <FormWindow
         editForm

@@ -203,6 +203,7 @@ exports.loginWithGoogle = async (req, res) => {
       cartList: newUser.cartList,
       profileImage: newUser.profileImage,
       postalInformation: newUser.postalInformation,
+      googleId: newUser.googleId,
     });
   }
 
@@ -218,6 +219,7 @@ exports.loginWithGoogle = async (req, res) => {
       cartList: existingUser.cartList,
       profileImage: existingUser.profileImage,
       postalInformation: existingUser.postalInformation,
+      googleId: existingUser.googleId,
     });
   }
 };

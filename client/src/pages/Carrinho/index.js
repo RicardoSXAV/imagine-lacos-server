@@ -10,8 +10,12 @@ import Input from "../../components/UI/Input";
 import Button from "../../components/UI/Button";
 
 import priceFormatter from "../../utils/priceFormatter";
+import Image from "../../components/Image";
+import AddPostalInformation from "../../components/Forms/AddPostalInformation";
 
 function Carrinho(props) {
+  const [showAddWindow, setShowAddWindow] = useState(false);
+
   const [paymentMethod, setPaymentMethod] = useState("Cartão");
   const [showCreditCardForm, setShowCreditCardForm] = useState(false);
   const [checkoutProducts, setCheckoutProducts] = useState(
@@ -95,6 +99,13 @@ function Carrinho(props) {
         setShowWindow={setShowCreditCardForm}
         handleSubmit={handleCreditCardPayment}
       />
+
+      <AddPostalInformation
+        showAddWindow={showAddWindow}
+        setShowAddWindow={setShowAddWindow}
+        updateUserInformation={props.updateUserInformation}
+      />
+
       <div className="cart-page">
         <Navbar user userData={props.userData} />
 
@@ -129,7 +140,8 @@ function Carrinho(props) {
           </div>
         ))}
 
-        {props.userData?.cartList.length > 0 ? (
+        {props.userData?.cartList.length > 0 &&
+        JSON.stringify(props.userData?.postalInformation) !== "{}" ? (
           <div className="cart-payment-box">
             <div className="cart-payment-price-table">
               <table>
@@ -168,6 +180,18 @@ function Carrinho(props) {
               selectedOption={paymentMethod}
             />
             <Button onClick={() => handlePaymentChoose()}>Comprar</Button>
+          </div>
+        ) : JSON.stringify(props.userData?.postalInformation) === "{}" ? (
+          <div className="box-no-postal-info">
+            <Image name="bow-tie.svg" />
+            <p>Você ainda não cadastrou seus dados postais.</p>
+            <p>Clique abaixo para adicionar.</p>
+            <Button
+              id="cart-add-postal-info"
+              onClick={() => setShowAddWindow(true)}
+            >
+              Adicionar dados postais
+            </Button>
           </div>
         ) : (
           <p>Está bem vazio por aqui</p>

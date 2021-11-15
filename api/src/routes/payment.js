@@ -8,6 +8,8 @@ const adminAuth = require("../middlewares/adminAuth");
 
 const payment = require("../controllers/payment");
 
+router.get("/status/:chargeId", adminAuth, payment.status);
+
 router.get("/:paymentToken", userAuth, payment.creditCard);
 
 router.post("/billet", userAuth, payment.bankingBillet);

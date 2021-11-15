@@ -69,7 +69,7 @@ function Navbar(props) {
             </>
           )}
 
-          {props.userPage && (
+          {(props.userPage || props.adminPage) && (
             <Button id="user-page-logout-button" onClick={props.logoutUser}>
               Sair
             </Button>

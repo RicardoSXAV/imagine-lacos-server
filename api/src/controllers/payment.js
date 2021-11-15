@@ -21,6 +21,26 @@ const options = {
   pathCertHomologacao: "certificado-pix-homologacao.p12",
 };
 
+exports.status = async (req, res) => {
+  try {
+    const { chargeId } = req.params;
+
+    const gerencianet = new Gerencianet(options);
+    const params = {
+      id: chargeId,
+    };
+
+    gerencianet
+      .detailCharge(params)
+      .then((response) => {
+        return res.status(200).json({ error: false, status: response.status });
+      })
+      .catch(console.log);
+  } catch (error) {
+    return res.status(500).json({ error: true, message: error.message });
+  }
+};
+
 exports.creditCard = async (req, res) => {
   try {
     const { paymentToken } = req.params;
@@ -83,7 +103,13 @@ exports.creditCard = async (req, res) => {
         }
 
         const newOrder = new Order({
-          userId,
+          userInfo: {
+            userId,
+            name: user.fullName,
+            profileImage: user.profileImage,
+            email: user.email,
+            phoneNumber: user.postalInformation.phoneNumber,
+          },
           postalInformation: user.postalInformation,
           products: itemsArray,
           paymentMethod: "credit-card",

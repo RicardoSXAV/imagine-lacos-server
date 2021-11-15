@@ -11,6 +11,7 @@ import { useSessionStorage } from "./hooks/useSessionStorage";
 
 import Home from "./pages/Home";
 import Categoria from "./pages/Categoria";
+import Produto from "./pages/Produto";
 import Entrar from "./pages/Entrar";
 import Registrar from "./pages/Registrar";
 import Verificacao from "./pages/Verificacao";
@@ -25,7 +26,7 @@ import Pagamento from "./pages/Pagamento";
 
 import Administrador from "./pages/Admin/Administrador";
 import Produtos from "./pages/Admin/Produtos";
-import Produto from "./pages/Produto";
+import Pedidos from "./pages/Admin/Pedidos";
 
 function App() {
   const history = useHistory();
@@ -36,6 +37,7 @@ function App() {
   const [currentProductPage, setCurrentProductPage] = useSessionStorage(1);
   const [currentCategoryProductPage, setCurrentCategoryProductPage] =
     useState(1);
+  const [orderList, setOrderList] = useSessionStorage({}, "orderList");
   const [paginationInfo, setPaginationInfo] = useSessionStorage(
     {},
     "paginationInfo"
@@ -281,6 +283,18 @@ function App() {
       .catch((error) => console.log(error.response));
   }
 
+  // Order
+
+  async function getOrders() {
+    await axios.get("http://localhost:5000/api/order").then((response) =>
+      setOrderList({
+        orders: response.data.events,
+        page: response.data.page,
+        totalPages: response.data.totalPages,
+      })
+    );
+  }
+
   return (
     <div className="App">
       <Switch>
@@ -381,7 +395,11 @@ function App() {
               path="/carrinho"
               exact
               render={() => (
-                <Carrinho userData={userData} removeFromCart={removeFromCart} />
+                <Carrinho
+                  userData={userData}
+                  removeFromCart={removeFromCart}
+                  updateUserInformation={updateUserInformation}
+                />
               )}
             />
 
@@ -396,7 +414,9 @@ function App() {
             <Route
               path="/administrador"
               exact
-              render={() => <Administrador logoutUser={logoutUser} />}
+              render={() => (
+                <Administrador userData={userData} logoutUser={logoutUser} />
+              )}
             />
 
             <Route
@@ -409,6 +429,18 @@ function App() {
                   createProduct={createProduct}
                   removeProduct={removeProduct}
                   userData={userData}
+                />
+              )}
+            />
+
+            <Route
+              path="/pedidos"
+              exact
+              render={() => (
+                <Pedidos
+                  userData={userData}
+                  orderList={orderList}
+                  getOrders={getOrders}
                 />
               )}
             />

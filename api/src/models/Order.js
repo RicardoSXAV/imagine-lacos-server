@@ -3,10 +3,9 @@ const pagination = require("mongoose-aggregate-paginate-v2");
 
 const OrderSchema = new mongoose.Schema(
   {
-    userId: {
-      type: mongoose.Schema.Types.ObjectId,
+    userInfo: {
+      type: Object,
       required: true,
-      ref: "User",
     },
     paymentMethod: {
       type: String,

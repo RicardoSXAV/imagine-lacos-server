@@ -12,15 +12,16 @@ function FormWindow(props) {
       style={props.showWindow ? { display: "block" } : { display: "none" }}
     >
       <div className={"form-box" + completeClass} {...props}>
-        <h1 className="form-title">{props.title}</h1>
-        <Icon
-          name="x-button.png"
-          id="form-x-button"
-          onClick={() => props.setShowWindow(false)}
-        />
+        <div className="form-box-overflow">
+          <h1 className="form-title">{props.title}</h1>
+          <Icon
+            name="x-button.png"
+            id="form-x-button"
+            onClick={() => props.setShowWindow(false)}
+          />
 
-        {props.children}
-
+          {props.children}
+        </div>
         <div className="form-buttons">
           <Button id="form-confirm-button" onClick={props.handleSubmit}>
             Confirmar
