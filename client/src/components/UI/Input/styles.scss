@@ -39,6 +39,7 @@
   padding: 20px 60px 20px 40px;
 
   cursor: pointer;
+  user-select: none;
 
   background: linear-gradient(180deg, #ffffff 0%, rgba(255, 255, 255, 0) 100%),
     #e4f2f9;

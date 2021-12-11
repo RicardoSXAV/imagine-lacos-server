@@ -212,7 +212,7 @@ exports.pix = async (req, res) => {
     id: 1432132,
   };
 
-  gerencianet.detailCharge(params).then(console.log).catch(console.log).done();
+  // gerencianet.detailCharge(params).then(console.log).catch(console.log).done();
 
   /* let body = {
     calendario: {

@@ -14,11 +14,21 @@ function OrderView(props) {
       ) : (
         <Image name="user-avatar.svg" className="order-view-client-image" />
       )}
-      <h1 className="order-view-client">{props.clientName}</h1>
-      <p>{props.clientEmail}</p>
-      <p>{props.clientNumber}</p>
-      <Icon name="list-button.png" />
-      {paymentIcon[props.paymentMethod]}
+      <div className="information-column">
+        <h1 className="order-view-client">{props.clientName}</h1>
+        <div className="row client-contact-row">
+          <p>{props.clientEmail}</p>
+          <div className="order-view-circle" />
+          <p>{props.clientNumber}</p>
+        </div>
+        <div className="row payment-row">
+          {paymentIcon[props.paymentMethod]}
+          <div className="order-payment-status-box">
+            <p className="payment-status-loading">Carregando . . .</p>
+          </div>
+          <Icon name="list-button.png" id="order-view-list-button" />
+        </div>
+      </div>
     </div>
   );
 }

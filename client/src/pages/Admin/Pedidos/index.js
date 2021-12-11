@@ -27,15 +27,17 @@ function Pedidos(props) {
           selectedOption={props.productsFilter}
         />
 
-        {props.orderList?.orders?.map((order) => (
-          <OrderView
-            clientName={order.userInfo.name}
-            clientEmail={order.userInfo.email}
-            clientImage={order.userInfo.profileImage}
-            clientNumber={order.userInfo.phoneNumber}
-            paymentMethod={order.paymentMethod}
-          />
-        ))}
+        <div className="order-page-list">
+          {props.orderList?.orders?.map((order) => (
+            <OrderView
+              clientName={order.userInfo.name}
+              clientEmail={order.userInfo.email}
+              clientImage={order.userInfo.profileImage}
+              clientNumber={order.userInfo.phoneNumber}
+              paymentMethod={order.paymentMethod}
+            />
+          ))}
+        </div>
 
         <Pagination
           totalPages={props.orderList.totalPages}
