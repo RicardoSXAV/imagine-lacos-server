@@ -34,7 +34,7 @@ function FormWindow(props) {
           </Button>
         </div>
       </div>
-      <div className="background-blur"></div>
+      <div className="background-blur" />
     </div>
   );
 }

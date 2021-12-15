@@ -38,6 +38,10 @@ function App() {
   const [currentCategoryProductPage, setCurrentCategoryProductPage] =
     useState(1);
   const [orderList, setOrderList] = useSessionStorage({}, "orderList");
+  const [haveOrderListStatus, setHaveOrderListStatus] = useSessionStorage(
+    false,
+    "orderListStatus"
+  );
   const [paginationInfo, setPaginationInfo] = useSessionStorage(
     {},
     "paginationInfo"
@@ -284,6 +288,49 @@ function App() {
   }
 
   // Order
+
+  useEffect(() => {
+    if (JSON.stringify(orderList) !== "{}" && haveOrderListStatus === false) {
+      console.log("rodando order");
+
+      const orderListChargeIds = orderList.orders.map(
+        (order) => order.paymentInfo.chargeId
+      );
+
+      function getOrderListStatus() {
+        const promises = [];
+
+        for (let i = 0; i < orderListChargeIds.length; i++) {
+          const newRequest = axios.get(
+            "http://localhost:5000/api/payment/status/" + orderListChargeIds[i]
+          );
+
+          promises.push(newRequest);
+        }
+
+        return Promise.all(promises);
+      }
+
+      getOrderListStatus()
+        .then((responses) => {
+          const statusArray = responses.map((response) => response.data.status);
+
+          const newOrderList = {
+            orders: orderList.orders.map((order, index) => ({
+              ...order,
+              paymentStatus: statusArray[index],
+            })),
+            page: orderList.page,
+            totalPages: orderList.totalPages,
+          };
+
+          setOrderList(newOrderList);
+        })
+        .catch((error) => console.log(error.response));
+
+      setHaveOrderListStatus(true);
+    }
+  }, [orderList]);
 
   async function getOrders() {
     await axios.get("http://localhost:5000/api/order").then((response) =>

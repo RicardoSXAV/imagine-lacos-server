@@ -1,21 +1,31 @@
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 
 import "./styles.scss";
 import Navbar from "../../../components/Navbar";
 import Pagination from "../../../components/Pagination";
-import Button from "../../../components/UI/Button";
 import Input from "../../../components/UI/Input";
 import OrderView from "../../../components/OrderView";
+import OrderDetails from "../../../components/OrderDetails";
 
 function Pedidos(props) {
+  const [orderDetails, setOrderDetails] = useState({});
+
   useEffect(() => {
     if (JSON.stringify(props.orderList) === "{}") {
       props.getOrders();
     }
   }, []);
 
+  function showOrderDetails(postalInfo) {
+    setOrderDetails(postalInfo);
+  }
+
   return (
     <>
+      <OrderDetails
+        orderDetails={orderDetails}
+        setOrderDetails={setOrderDetails}
+      />
       <Navbar admin userData={props.userData} />
       <div className="order-page-container">
         <Input
@@ -35,6 +45,9 @@ function Pedidos(props) {
               clientImage={order.userInfo.profileImage}
               clientNumber={order.userInfo.phoneNumber}
               paymentMethod={order.paymentMethod}
+              paymentStatus={order.paymentStatus}
+              postalInformation={order.postalInformation}
+              showOrderDetails={showOrderDetails}
             />
           ))}
         </div>
