@@ -11,11 +11,20 @@ import Input from "../../components/UI/Input";
 
 import zipcodeFormat from "../../utils/zipcodeFormat";
 import AddPostalInformation from "../../components/Forms/AddPostalInformation";
+import { useEffect } from "react";
 
 function Usuario(props) {
   const [showAddWindow, setShowAddWindow] = useState(false);
   const [showEditWindow, setShowEditWindow] = useState(false);
   const [showHelpPopup, setShowHelpPopup] = useState(false);
+
+  useEffect(() => {
+    if (showHelpPopup === true) {
+      document.body.style.overflowY = "hidden";
+    } else {
+      document.body.style.overflowY = "auto";
+    }
+  }, [showHelpPopup]);
 
   const [street, setStreet] = useState("");
   const [number, setNumber] = useState("");
@@ -83,12 +92,12 @@ function Usuario(props) {
   return (
     <>
       <Popup
-        className="help-popup"
+        id="help-popup"
         showPopup={showHelpPopup}
         setShowPopup={setShowHelpPopup}
       >
         <Image name="conversation-ballon.png" />
-        Precisa de ajuda? Entre em contato conosco pelo Whatsapp!
+        <p>Precisa de ajuda? Entre em contato conosco pelo Whatsapp!</p>
         <div className="popup-flex">
           <Image name="whatsapp.svg" />
           <h1>(61) 998631756</h1>

@@ -58,6 +58,7 @@ function App() {
     false,
     "loadUserError"
   );
+  const [loginUserError, setLoginUserError] = useState(false);
   const [paginationActive, setPaginationActive] = useState(
     false,
     "paginationActive"
@@ -159,7 +160,10 @@ function App() {
         setLoadUserError(false);
         history.push("/");
       })
-      .catch((error) => console.log(error.response));
+      .catch((error) => {
+        setLoginUserError(true);
+        console.log(error.response);
+      });
   }
 
   async function loginUserWithGoogle(res) {
@@ -405,6 +409,8 @@ function App() {
                 <Entrar
                   loginUser={loginUser}
                   loginUserWithGoogle={loginUserWithGoogle}
+                  loginUserError={loginUserError}
+                  setLoginUserError={setLoginUserError}
                 />
               )}
             />
@@ -476,6 +482,11 @@ function App() {
                   createProduct={createProduct}
                   removeProduct={removeProduct}
                   userData={userData}
+                  paginationInfo={paginationInfo}
+                  currentProductPage={currentProductPage}
+                  setCurrentProductPage={setCurrentProductPage}
+                  productsFilter={productsFilter}
+                  setProductsFilter={setProductsFilter}
                 />
               )}
             />

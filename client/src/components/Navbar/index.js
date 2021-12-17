@@ -3,7 +3,6 @@ import "./styles.scss";
 import { useHistory } from "react-router";
 
 import Icon from "../Icon";
-import Image from "../Image";
 import Button from "../UI/Button";
 import Badge from "../UI/Badge";
 
@@ -56,10 +55,12 @@ function Navbar(props) {
             <>
               <Icon
                 name="bar-graph.svg"
+                id="navbar-bar-graph"
                 onClick={() => history.push("/estatisticas")}
               />
               <Icon
                 name="bow-tie-plus.svg"
+                id="navbar-bow-tie-plus"
                 onClick={() => history.push("/produtos")}
               />
               <Icon

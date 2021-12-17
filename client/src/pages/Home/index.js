@@ -8,6 +8,7 @@ import useWindowDimensions from "../../hooks/useWindowDimensions";
 import FormWindow from "../../components/Forms/FormWindow";
 import Image from "../../components/Image";
 import Navbar from "../../components/Navbar";
+import Footer from "../../components/Footer";
 import ProductCard from "../../components/ProductCard";
 import Pagination from "../../components/Pagination";
 import BottomBar from "../../components/BottomBar";
@@ -159,6 +160,8 @@ function Home(props) {
             setCurrentPage={props.setCurrentProductPage}
           />
         </div>
+
+        <Footer />
       </div>
     </>
   );

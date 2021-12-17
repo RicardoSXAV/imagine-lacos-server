@@ -7,6 +7,7 @@ import Input from "../../../components/UI/Input";
 import Box from "../../../components/UI/Box";
 import ProductCard from "../../../components/ProductCard";
 import Navbar from "../../../components/Navbar";
+import Pagination from "../../../components/Pagination";
 
 function Produtos(props) {
   const [showWindow, setShowWindow] = useState(false);
@@ -89,29 +90,48 @@ function Produtos(props) {
         />
       </FormWindow>
 
-      <div>
+      <div className="products-page">
         <Navbar admin userData={props.userData} />
-        <Button onClick={() => setShowWindow(true)}>
-          Adicionar um produto
-        </Button>
-        <Box>
-          <div className="products-list">
-            {props.productList.map((product) => (
-              <ProductCard
-                admin
-                title={product.name}
-                category={product.category}
-                categoryId={product.categoryId}
-                price={product.price}
-                quantity={product.quantity}
-                id={product._id}
-                remove={props.removeProduct}
-              >
-                <img src={product.images[0]} alt="" />
-              </ProductCard>
-            ))}
-          </div>
-        </Box>
+
+        <div className="products-page-container">
+          <Button onClick={() => setShowWindow(true)} id="add-products-button">
+            Adicionar um produto
+          </Button>
+
+          <Input
+            type="select"
+            placeholder="Ordenar por"
+            id="product-filter-select"
+            options={["Recentes", "Antigos"]}
+            setOption={props.setProductsFilter}
+            selectedOption={props.productsFilter}
+          />
+
+          <Box>
+            <div className="products-list">
+              {props.productList.map((product) => (
+                <ProductCard
+                  admin
+                  title={product.name}
+                  category={product.category}
+                  categoryId={product.categoryId}
+                  price={product.price}
+                  quantity={product.quantity}
+                  id={product._id}
+                  remove={props.removeProduct}
+                >
+                  <img src={product.images[0]} alt="" />
+                </ProductCard>
+              ))}
+            </div>
+          </Box>
+
+          <Pagination
+            totalPages={props.paginationInfo.totalPages}
+            currentPage={props.currentProductPage}
+            setCurrentPage={props.setCurrentProductPage}
+          />
+        </div>
       </div>
     </>
   );

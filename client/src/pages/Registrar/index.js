@@ -1,14 +1,14 @@
 import "./styles.scss";
 
 import SignUpForm from "../../components/Forms/SignUpForm";
-import Icon from "../../components/Icon";
-import Badge from "../../components/UI/Badge";
+import Footer from "../../components/Footer";
 
 function Registrar(props) {
   return (
-    <div>
+    <>
       <SignUpForm registerUser={props.registerUser} />
-    </div>
+      <Footer />
+    </>
   );
 }
 

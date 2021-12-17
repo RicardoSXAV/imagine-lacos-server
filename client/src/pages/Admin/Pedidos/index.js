@@ -14,7 +14,13 @@ function Pedidos(props) {
     if (JSON.stringify(props.orderList) === "{}") {
       props.getOrders();
     }
-  }, []);
+
+    if (JSON.stringify(orderDetails) !== "{}") {
+      document.body.style.overflowY = "hidden";
+    } else {
+      document.body.style.overflowY = "auto";
+    }
+  }, [orderDetails]);
 
   function showOrderDetails(postalInfo) {
     setOrderDetails(postalInfo);
