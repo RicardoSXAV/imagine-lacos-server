@@ -54,15 +54,25 @@ function App() {
 
   const [userData, setUserData] = useSessionStorage({}, "userData");
 
+  const [errorMessage, setErrorMessage] = useState("");
   const [loadUserError, setLoadUserError] = useLocalStorage(
     false,
     "loadUserError"
   );
-  const [loginUserError, setLoginUserError] = useState(false);
   const [paginationActive, setPaginationActive] = useState(
     false,
     "paginationActive"
   );
+
+  // Error Popup
+
+  useEffect(() => {
+    if (errorMessage) {
+      document.body.style.overflowY = "hidden";
+    } else {
+      document.body.style.overflowY = "auto";
+    }
+  }, [errorMessage]);
 
   // Get Data
 
@@ -149,7 +159,10 @@ function App() {
     await axios
       .post("http://localhost:5000/api/user/register", object)
       .then((response) => console.log(response))
-      .catch((error) => console.log(error.response));
+      .catch((error) => {
+        setErrorMessage(error.response.data.message);
+        console.log(error.response);
+      });
   }
 
   async function loginUser(object) {
@@ -161,7 +174,7 @@ function App() {
         history.push("/");
       })
       .catch((error) => {
-        setLoginUserError(true);
+        setErrorMessage(error.response.data.message);
         console.log(error.response);
       });
   }
@@ -409,15 +422,21 @@ function App() {
                 <Entrar
                   loginUser={loginUser}
                   loginUserWithGoogle={loginUserWithGoogle}
-                  loginUserError={loginUserError}
-                  setLoginUserError={setLoginUserError}
+                  errorMessage={errorMessage}
+                  setErrorMessage={setErrorMessage}
                 />
               )}
             />
             <Route
               path="/registrar"
               exact
-              render={() => <Registrar registerUser={registerUser} />}
+              render={() => (
+                <Registrar
+                  registerUser={registerUser}
+                  errorMessage={errorMessage}
+                  setErrorMessage={setErrorMessage}
+                />
+              )}
             />
             <Route
               path="/verificacao/:token"

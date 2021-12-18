@@ -54,8 +54,9 @@ router.post(
     check("email")
       .not()
       .isEmpty()
+      .withMessage("O usuário precisa inserir um endereço de e-mail!")
       .isEmail()
-      .withMessage("O usuário precisa de um endereço de e-mail!"),
+      .withMessage("O endereço de e-mail inserido não é válido!"),
     check("password")
       .not()
       .isEmpty()
