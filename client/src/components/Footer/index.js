@@ -4,7 +4,7 @@ import { Link } from "react-router-dom";
 
 import Icon from "../Icon";
 
-function Footer() {
+function Footer(props) {
   return (
     <div className="footer-box">
       <div className="footer-box-column">

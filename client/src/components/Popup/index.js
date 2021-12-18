@@ -10,7 +10,7 @@ function Popup(props) {
         style={props.showPopup ? { display: "block" } : { display: "none" }}
         {...props}
       >
-        <div className="popup-window">
+        <div className="popup-window" {...props}>
           <Icon
             name="x-button.png"
             id="popup-x-button"

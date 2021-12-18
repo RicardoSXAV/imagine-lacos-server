@@ -3,6 +3,7 @@ import "./styles.scss";
 import { useState } from "react";
 
 import Navbar from "../../components/Navbar";
+import Footer from "../../components/Footer";
 import Image from "../../components/Image";
 import FormWindow from "../../components/Forms/FormWindow";
 import Popup from "../../components/Popup";
@@ -96,10 +97,10 @@ function Usuario(props) {
         showPopup={showHelpPopup}
         setShowPopup={setShowHelpPopup}
       >
-        <Image name="conversation-ballon.png" />
+        <Image name="conversation-ballon.png" id="conversation-ballon-image" />
         <p>Precisa de ajuda? Entre em contato conosco pelo Whatsapp!</p>
         <div className="popup-flex">
-          <Image name="whatsapp.svg" />
+          <Image name="whatsapp.svg" id="whatsapp-image" />
           <h1>(61) 998631756</h1>
         </div>
       </Popup>
@@ -303,6 +304,8 @@ function Usuario(props) {
             </div>
           </div>
         </div>
+
+        <Footer />
       </div>
     </>
   );
