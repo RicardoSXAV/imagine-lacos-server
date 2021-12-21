@@ -230,6 +230,13 @@ function App() {
 
   // Category
 
+  async function getCategoryProductsCount(id) {
+    const response = await axios.get(
+      "http://localhost:5000/api/category/count/" + id
+    );
+    return response.data.countProducts;
+  }
+
   async function createCategory(object) {
     const data = new FormData();
     data.append("name", object.categoryName);
@@ -372,6 +379,7 @@ function App() {
               productList={productList}
               createCategory={createCategory}
               deleteCategory={deleteCategory}
+              getCategoryProductsCount={getCategoryProductsCount}
               addToCart={addToCart}
               paginationInfo={paginationInfo}
               currentProductPage={currentProductPage}

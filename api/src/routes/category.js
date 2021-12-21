@@ -9,6 +9,7 @@ const multerUpload = require("../middlewares/multerUpload");
 const category = require("../controllers/category");
 
 router.get("/", category.list);
+router.get("/count/:id", category.countProducts);
 
 router.post(
   "/",

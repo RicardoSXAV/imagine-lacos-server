@@ -12,13 +12,18 @@ import Footer from "../../components/Footer";
 import ProductCard from "../../components/ProductCard";
 import Pagination from "../../components/Pagination";
 import BottomBar from "../../components/BottomBar";
+import PopupConfirmDelete from "../../components/PopupConfirmDelete";
 import Carousel from "../../components/UI/Carousel";
 import Input from "../../components/UI/Input";
 import Box from "../../components/UI/Box";
 import Button from "../../components/UI/Button";
+import { useEffect } from "react";
 
 function Home(props) {
   const [showWindow, setShowWindow] = useState(false);
+  const [showConfirmDelete, setShowConfirmDelete] = useState(false);
+  const [productsDeleteCount, setProductsDeleteCount] = useState(0);
+  const [deleteId, setDeleteId] = useState("");
 
   // Category
   const [categoryName, setCategoryName] = useState("");
@@ -57,6 +62,25 @@ function Home(props) {
     history.push(`/categoria/${name.replace(/\s+/g, "-")}`);
   }
 
+  function confirmDelete() {
+    props.deleteCategory(deleteId);
+    setShowConfirmDelete(false);
+    setDeleteId("");
+  }
+
+  function cancelDelete() {
+    setShowConfirmDelete(false);
+    setDeleteId("");
+  }
+
+  useEffect(() => {
+    if (showConfirmDelete || showWindow) {
+      document.body.style.overflowY = "hidden";
+    } else {
+      document.body.style.overflowY = "auto";
+    }
+  }, [showConfirmDelete, showWindow]);
+
   return (
     <>
       <FormWindow
@@ -81,6 +105,17 @@ function Home(props) {
         />
       </FormWindow>
 
+      {showConfirmDelete && (
+        <PopupConfirmDelete confirm={confirmDelete} cancel={cancelDelete}>
+          Tem certeza que deseja remover essa categoria
+          {productsDeleteCount > 0
+            ? ` e ${productsDeleteCount} produto${
+                productsDeleteCount > 1 ? "s" : ""
+              }?`
+            : "?"}
+        </PopupConfirmDelete>
+      )}
+
       <div className="home-page">
         {width > 600 ? renderNavbar() : renderBottomBar()}
 
@@ -97,7 +132,13 @@ function Home(props) {
           {props.userData.role === "admin" ? (
             <Carousel
               clickCard={goToCategoryPage}
-              deleteCard={props.deleteCategory}
+              deleteCard={(id) => {
+                props.getCategoryProductsCount(id).then((response) => {
+                  setProductsDeleteCount(response);
+                  setShowConfirmDelete(true);
+                  setDeleteId(id);
+                });
+              }}
               gradient
               deletable
             >
@@ -119,46 +160,57 @@ function Home(props) {
             </Carousel>
           )}
 
-          <div className="product-list-container">
-            <Input
-              type="select"
-              placeholder="Ordenar por"
-              id="product-filter-select"
-              options={["Recentes", "Antigos"]}
-              setOption={props.setProductsFilter}
-              selectedOption={props.productsFilter}
+          {props.productList?.length > 0 ? (
+            <div className="product-list-container">
+              <Input
+                type="select"
+                placeholder="Ordenar por"
+                id="product-filter-select"
+                options={["Recentes", "Antigos"]}
+                setOption={props.setProductsFilter}
+                selectedOption={props.productsFilter}
+              />
+
+              <Box>
+                <div className="products-list">
+                  {props.productList?.map((product) => (
+                    <ProductCard
+                      title={product.name}
+                      category={product.category}
+                      categoryId={product.categoryId}
+                      price={product.price}
+                      id={product._id}
+                      addToCart={props.addToCart}
+                    >
+                      <img
+                        src={product.images[0]}
+                        alt=""
+                        onClick={() => {
+                          history.push(`/produto/${product._id}`);
+                          window.scrollTo(0, 0);
+                        }}
+                      />
+                    </ProductCard>
+                  ))}
+                </div>
+              </Box>
+            </div>
+          ) : (
+            <div className="empty-product-list-container">
+              <Box id="empty-product-box">
+                <h1>O estoque de produtos está vazio!</h1>
+                <Image name="empty-package.png" />
+              </Box>
+            </div>
+          )}
+
+          {props.productList?.length > 0 && (
+            <Pagination
+              totalPages={props.paginationInfo.totalPages}
+              currentPage={props.currentProductPage}
+              setCurrentPage={props.setCurrentProductPage}
             />
-
-            <Box>
-              <div className="products-list">
-                {props.productList?.map((product) => (
-                  <ProductCard
-                    title={product.name}
-                    category={product.category}
-                    categoryId={product.categoryId}
-                    price={product.price}
-                    id={product._id}
-                    addToCart={props.addToCart}
-                  >
-                    <img
-                      src={product.images[0]}
-                      alt=""
-                      onClick={() => {
-                        history.push(`/produto/${product._id}`);
-                        window.scrollTo(0, 0);
-                      }}
-                    />
-                  </ProductCard>
-                ))}
-              </div>
-            </Box>
-          </div>
-
-          <Pagination
-            totalPages={props.paginationInfo.totalPages}
-            currentPage={props.currentProductPage}
-            setCurrentPage={props.setCurrentProductPage}
-          />
+          )}
         </div>
 
         <Footer />

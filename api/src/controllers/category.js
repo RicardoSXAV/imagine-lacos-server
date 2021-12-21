@@ -1,4 +1,5 @@
 const Category = require("../models/Category");
+const Product = require("../models/Product");
 
 exports.list = async (req, res) => {
   const categories = await Category.find({});
@@ -7,6 +8,14 @@ exports.list = async (req, res) => {
   });
 
   res.status(200).json({ categoryList });
+};
+
+exports.countProducts = async (req, res) => {
+  const { id } = req.params;
+
+  const countProducts = await Product.countDocuments({ categoryId: id });
+
+  res.status(200).json({ countProducts });
 };
 
 exports.create = async (req, res) => {
@@ -46,8 +55,10 @@ exports.create = async (req, res) => {
 
 exports.delete = async (req, res) => {
   try {
-    const category = await Category.findById(req.params.id);
+    const { id } = req.params;
+    const category = await Category.findById(id);
 
+    await Product.remove({ categoryId: id });
     await category.remove();
 
     res

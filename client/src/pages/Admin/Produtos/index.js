@@ -8,9 +8,13 @@ import Box from "../../../components/UI/Box";
 import ProductCard from "../../../components/ProductCard";
 import Navbar from "../../../components/Navbar";
 import Pagination from "../../../components/Pagination";
+import PopupConfirmDelete from "../../../components/PopupConfirmDelete";
+import { useEffect } from "react";
 
 function Produtos(props) {
   const [showWindow, setShowWindow] = useState(false);
+  const [deleteId, setDeleteId] = useState("");
+  const [showDeleteConfirmation, setShowDeleteConfirmation] = useState(false);
 
   const [productCategory, setProductCategory] = useState(
     props.categoryList[0]?.name
@@ -30,6 +34,25 @@ function Produtos(props) {
     setProductDescription("");
     setProductImages([]);
   }
+
+  function confirmDelete() {
+    props.removeProduct(deleteId);
+    setShowDeleteConfirmation(false);
+    setDeleteId("");
+  }
+
+  function cancelDelete() {
+    setShowDeleteConfirmation(false);
+    setDeleteId("");
+  }
+
+  useEffect(() => {
+    if (showWindow || showDeleteConfirmation) {
+      document.body.style.overflowY = "hidden";
+    } else {
+      document.body.style.overflowY = "auto";
+    }
+  }, [showWindow, showDeleteConfirmation]);
 
   return (
     <>
@@ -90,6 +113,12 @@ function Produtos(props) {
         />
       </FormWindow>
 
+      {showDeleteConfirmation && (
+        <PopupConfirmDelete confirm={confirmDelete} cancel={cancelDelete}>
+          Tem certeza que deseja remover esse produto?
+        </PopupConfirmDelete>
+      )}
+
       <div className="products-page">
         <Navbar admin userData={props.userData} />
 
@@ -118,7 +147,10 @@ function Produtos(props) {
                   price={product.price}
                   quantity={product.quantity}
                   id={product._id}
-                  remove={props.removeProduct}
+                  remove={(id) => {
+                    setDeleteId(id);
+                    setShowDeleteConfirmation(true);
+                  }}
                 >
                   <img src={product.images[0]} alt="" />
                 </ProductCard>
