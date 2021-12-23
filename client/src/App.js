@@ -27,14 +27,17 @@ import Pagamento from "./pages/Pagamento";
 import Administrador from "./pages/Admin/Administrador";
 import Produtos from "./pages/Admin/Produtos";
 import Pedidos from "./pages/Admin/Pedidos";
+import Estatisticas from "./pages/Admin/Estatisticas";
 
 function App() {
   const history = useHistory();
 
   const [categoryList, setCategoryList] = useSessionStorage([], "categoryList");
   const [productList, setProductList] = useSessionStorage([], "productList");
-  const [productsFilter, setProductsFilter] = useState("Recentes");
-  const [currentProductPage, setCurrentProductPage] = useSessionStorage(1);
+  const [currentProductPage, setCurrentProductPage] = useSessionStorage(
+    1,
+    "currentProductPage"
+  );
   const [currentCategoryProductPage, setCurrentCategoryProductPage] =
     useState(1);
   const [orderList, setOrderList] = useSessionStorage({}, "orderList");
@@ -59,10 +62,12 @@ function App() {
     false,
     "loadUserError"
   );
-  const [paginationActive, setPaginationActive] = useState(
-    false,
-    "paginationActive"
+  const [paginationActive, setPaginationActive] = useState(false);
+  const [productsFilter, setProductsFilter] = useSessionStorage(
+    "Recentes",
+    "productsFilter"
   );
+  const [productsFilterActive, setProductsFilterActive] = useState(false);
 
   // Error Popup
 
@@ -89,7 +94,7 @@ function App() {
     if (productList.length === 0) {
       async function getProducts() {
         await axios
-          .get("http://localhost:5000/api/product")
+          .get(`http://localhost:5000/api/product?recent=true`)
           .then((response) => {
             setProductList(response.data.events);
             setPaginationInfo({
@@ -121,7 +126,9 @@ function App() {
     if (paginationActive) {
       async function getProducts() {
         await axios
-          .get(`http://localhost:5000/api/product?page=${currentProductPage}`)
+          .get(
+            `http://localhost:5000/api/product?page=${currentProductPage}&recent=true`
+          )
           .then((response) => {
             setProductList(response.data.events);
             setPaginationInfo({
@@ -135,6 +142,14 @@ function App() {
 
     setPaginationActive(true);
   }, [currentProductPage]);
+
+  useEffect(() => {
+    if (productsFilterActive) {
+      updateProductList(productsFilter);
+    }
+
+    setProductsFilterActive(true);
+  }, [productsFilter]);
 
   async function getCategoryProducts(categoryName) {
     if (filteredProductList.length === 0) {
@@ -266,6 +281,22 @@ function App() {
 
   // Product
 
+  async function updateProductList(productsFilter) {
+    await axios
+      .get(
+        `http://localhost:5000/api/product?page=${currentProductPage}${
+          productsFilter === "Recentes" && "&recent=true"
+        }`
+      )
+      .then((response) => {
+        setProductList(response.data.events);
+        setPaginationInfo({
+          totalPages: response.data.totalPages,
+        });
+      })
+      .catch((error) => console.log(error.response));
+  }
+
   async function createProduct(object) {
     const data = new FormData();
     data.append("category", object.productCategory);
@@ -386,6 +417,7 @@ function App() {
               setCurrentProductPage={setCurrentProductPage}
               productsFilter={productsFilter}
               setProductsFilter={setProductsFilter}
+              updateProductList={updateProductList}
             />
           )}
         />
@@ -528,6 +560,12 @@ function App() {
                   getOrders={getOrders}
                 />
               )}
+            />
+
+            <Route
+              path="/estatisticas"
+              exact
+              render={() => <Estatisticas userData={userData} />}
             />
           </>
         )}

@@ -1,5 +1,5 @@
 import "./styles.scss";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 
 import FormWindow from "../../../components/Forms/FormWindow";
 import Button from "../../../components/UI/Button";
@@ -9,7 +9,7 @@ import ProductCard from "../../../components/ProductCard";
 import Navbar from "../../../components/Navbar";
 import Pagination from "../../../components/Pagination";
 import PopupConfirmDelete from "../../../components/PopupConfirmDelete";
-import { useEffect } from "react";
+import Image from "../../../components/Image";
 
 function Produtos(props) {
   const [showWindow, setShowWindow] = useState(false);
@@ -127,42 +127,53 @@ function Produtos(props) {
             Adicionar um produto
           </Button>
 
-          <Input
-            type="select"
-            placeholder="Ordenar por"
-            id="product-filter-select"
-            options={["Recentes", "Antigos"]}
-            setOption={props.setProductsFilter}
-            selectedOption={props.productsFilter}
-          />
+          {props.productList?.length > 0 ? (
+            <>
+              <Input
+                type="select"
+                placeholder="Ordenar por"
+                id="product-filter-select"
+                options={["Recentes", "Antigos"]}
+                setOption={props.setProductsFilter}
+                selectedOption={props.productsFilter}
+              />
 
-          <Box>
-            <div className="products-list">
-              {props.productList.map((product) => (
-                <ProductCard
-                  admin
-                  title={product.name}
-                  category={product.category}
-                  categoryId={product.categoryId}
-                  price={product.price}
-                  quantity={product.quantity}
-                  id={product._id}
-                  remove={(id) => {
-                    setDeleteId(id);
-                    setShowDeleteConfirmation(true);
-                  }}
-                >
-                  <img src={product.images[0]} alt="" />
-                </ProductCard>
-              ))}
+              <Box>
+                <div className="products-list">
+                  {props.productList.map((product) => (
+                    <ProductCard
+                      admin
+                      title={product.name}
+                      category={product.category}
+                      categoryId={product.categoryId}
+                      price={product.price}
+                      quantity={product.quantity}
+                      id={product._id}
+                      remove={(id) => {
+                        setDeleteId(id);
+                        setShowDeleteConfirmation(true);
+                      }}
+                    >
+                      <img src={product.images[0]} alt="" />
+                    </ProductCard>
+                  ))}
+                </div>
+              </Box>
+
+              <Pagination
+                totalPages={props.paginationInfo.totalPages}
+                currentPage={props.currentProductPage}
+                setCurrentPage={props.setCurrentProductPage}
+              />
+            </>
+          ) : (
+            <div className="empty-product-list-container">
+              <Box id="empty-product-box">
+                <h1>O estoque de produtos está vazio!</h1>
+                <Image name="empty-package.png" />
+              </Box>
             </div>
-          </Box>
-
-          <Pagination
-            totalPages={props.paginationInfo.totalPages}
-            currentPage={props.currentProductPage}
-            setCurrentPage={props.setCurrentProductPage}
-          />
+          )}
         </div>
       </div>
     </>

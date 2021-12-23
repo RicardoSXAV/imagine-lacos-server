@@ -4,6 +4,7 @@ import { useState } from "react";
 import { useHistory } from "react-router-dom";
 
 import useWindowDimensions from "../../hooks/useWindowDimensions";
+import { useSessionStorage } from "../../hooks/useSessionStorage";
 
 import FormWindow from "../../components/Forms/FormWindow";
 import Image from "../../components/Image";

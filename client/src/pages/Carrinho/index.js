@@ -33,7 +33,6 @@ function Carrinho(props) {
       .get("http://localhost:5000/api/order/shipping-price")
       .then((response) => {
         setShippingPrice(response.data.price);
-        console.log(shippingPrice);
       });
   }, []);
 

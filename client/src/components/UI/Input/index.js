@@ -41,11 +41,9 @@ function Input(props) {
 
   function selectOption(optionName, optionImage) {
     props.setOption(optionName);
-    setOptionImageName(optionImage);
-
-    console.log(optionImage);
 
     if (props.selectWithImages) {
+      setOptionImageName(optionImage);
     }
   }
 

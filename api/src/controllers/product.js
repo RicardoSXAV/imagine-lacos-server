@@ -3,10 +3,10 @@ const Category = require("../models/Category");
 
 exports.list = async (req, res) => {
   try {
-    let aggregate_options = [];
+    const aggregate_options = [];
 
-    let page = parseInt(req.query.page) || 1;
-    let limit = 9;
+    const page = parseInt(req.query.page) || 1;
+    const limit = 9;
 
     // Pagination options
     const options = {
@@ -17,12 +17,13 @@ exports.list = async (req, res) => {
         totalDocs: "totalResults",
         docs: "events",
       },
+      sort: {
+        createdAt: req.query.recent ? "desc" : "asc",
+      },
     };
 
-    // FILTERING
-    let match = {};
+    const match = {};
 
-    // filter by name - use $regex in mongodb - add the 'i' flag if you want the search to be case insensitive.
     if (req.query.name) {
       match.name = { $regex: req.query.name, $options: "i" };
     }
