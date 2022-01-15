@@ -1,17 +1,19 @@
 import "./styles.scss";
 
 import { useEffect, useState } from "react";
+import { useHistory } from "react-router-dom";
 import axios from "axios";
+
+import priceFormatter from "../../utils/priceFormatter";
 
 import Navbar from "../../components/Navbar";
 import Icon from "../../components/Icon";
 import CreditCardForm from "../../components/Forms/CreditCardForm";
-import Input from "../../components/UI/Input";
-import Button from "../../components/UI/Button";
-
-import priceFormatter from "../../utils/priceFormatter";
 import Image from "../../components/Image";
 import AddPostalInformation from "../../components/Forms/AddPostalInformation";
+import Input from "../../components/UI/Input";
+import Button from "../../components/UI/Button";
+import Box from "../../components/UI/Box";
 
 function Carrinho(props) {
   const [showAddWindow, setShowAddWindow] = useState(false);
@@ -26,6 +28,8 @@ function Carrinho(props) {
     }))
   );
   const [shippingPrice, setShippingPrice] = useState(0);
+
+  const history = useHistory();
 
   useEffect(() => {
     // Calcular o preço do frete
@@ -108,9 +112,11 @@ function Carrinho(props) {
       <div className="cart-page">
         <Navbar user userData={props.userData} />
 
-        <div className="cart-page-title-box">
-          <h1>Seu carrinho</h1>
-        </div>
+        {props.userData?.cartList.length > 0 && (
+          <div className="cart-page-title-box">
+            <h1>Seu carrinho</h1>
+          </div>
+        )}
 
         {props.userData.cartList.map((product, index) => (
           <div className="cart-product-card">
@@ -118,10 +124,13 @@ function Carrinho(props) {
               className="cart-product-image"
               src={product.productImage}
               alt={product.productName}
+              onClick={() => history.push(`/produto/${product.productId}`)}
             />
             <div className="cart-product-info">
-              <h1>{product.productName}</h1>
-              <h1>{priceFormatter.format(product.productPrice)}</h1>
+              <h1 className="product-name">{product.productName}</h1>
+              <h1 className="product-price">
+                {priceFormatter.format(product.productPrice)}
+              </h1>
             </div>
             <Input
               type="step-number"
@@ -162,23 +171,25 @@ function Carrinho(props) {
               <div className="cart-payment-total-circle"></div>
               {checkoutTotalAmount} itens.
             </div>
-            <Input
-              type="select"
-              selectWithImages={{
-                background:
-                  "linear-gradient(179.86deg, #93EBA7 0.12%, #E9FFFE 99.88%)",
-                imagesName: [
-                  "credit-card.png",
-                  "bank-slip.png",
-                  "pix-icon.png",
-                ],
-              }}
-              placeholder="Pagamento"
-              options={["Cartão", "Boleto", "PIX"]}
-              setOption={setPaymentMethod}
-              selectedOption={paymentMethod}
-            />
-            <Button onClick={() => handlePaymentChoose()}>Comprar</Button>
+            <div className="container-row">
+              <Input
+                type="select"
+                selectWithImages={{
+                  background:
+                    "linear-gradient(179.86deg, #93EBA7 0.12%, #E9FFFE 99.88%)",
+                  imagesName: [
+                    "credit-card.png",
+                    "bank-slip.png",
+                    "pix-icon.png",
+                  ],
+                }}
+                placeholder="Pagamento"
+                options={["Cartão", "Boleto", "PIX"]}
+                setOption={setPaymentMethod}
+                selectedOption={paymentMethod}
+              />
+              <Button onClick={() => handlePaymentChoose()}>Comprar</Button>
+            </div>
           </div>
         ) : JSON.stringify(props.userData?.postalInformation) === "{}" ? (
           <div className="box-no-postal-info">
@@ -193,7 +204,20 @@ function Carrinho(props) {
             </Button>
           </div>
         ) : (
-          <p>Está bem vazio por aqui</p>
+          <div className="empty-cart-list-container">
+            <Box id="empty-cart-box">
+              <h1>Seu carrinho está vazio!</h1>
+              <Image name="gift-with-hearts.png" />
+              <Button
+                onClick={() => {
+                  history.push("/");
+                  window.scrollTo(0, 0);
+                }}
+              >
+                Ir às compras
+              </Button>
+            </Box>
+          </div>
         )}
       </div>
     </>

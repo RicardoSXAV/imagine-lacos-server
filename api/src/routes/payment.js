@@ -10,10 +10,14 @@ const payment = require("../controllers/payment");
 
 router.get("/status/:chargeId", adminAuth, payment.status);
 
+router.get("pix-status/:txId", payment.pixStatus);
+
+router.get("pix-qr-code/:locId", payment.pixQRCode);
+
 router.get("/:paymentToken", userAuth, payment.creditCard);
 
 router.post("/billet", userAuth, payment.bankingBillet);
 
-router.post("/pix", payment.pix);
+router.post("/pix", userAuth, payment.pix);
 
 module.exports = router;

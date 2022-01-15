@@ -41,6 +41,16 @@ exports.status = async (req, res) => {
   }
 };
 
+exports.pixStatus = async (req, res) => {
+  try {
+    const { txId } = req.params;
+  } catch (error) {
+    return res.status(500).json({ error: true, message: error.message });
+  }
+};
+
+exports.pixQRCode = async (req, res) => {};
+
 exports.creditCard = async (req, res) => {
   try {
     const { paymentToken } = req.params;
@@ -129,126 +139,182 @@ exports.creditCard = async (req, res) => {
 };
 
 exports.bankingBillet = async (req, res) => {
-  const { userId } = req.userData;
-  const user = await User.findById(userId);
-  const itemsArray = user.cartList.map((product) => ({
-    name: product.productName,
-    value: product.productPrice * 100,
-    amount: product.productAmount,
-  }));
+  try {
+    const { userId } = req.userData;
+    const user = await User.findById(userId);
+    const itemsArray = user.cartList.map((product) => ({
+      name: product.productName,
+      value: product.productPrice * 100,
+      amount: product.productAmount,
+    }));
 
-  const dateFormat = "YYYY-MM-DD";
-  const today = moment();
+    const dateFormat = "YYYY-MM-DD";
+    const today = moment();
 
-  const daysToAdd = today.day() + 3 >= 6 ? 2 : today.day() === 0 ? 1 : 0;
+    const daysToAdd = today.day() + 3 >= 6 ? 2 : today.day() === 0 ? 1 : 0;
 
-  const dayToPay = moment(today)
-    .add(3 + daysToAdd, "days")
-    .format(dateFormat);
+    const dayToPay = moment(today)
+      .add(3 + daysToAdd, "days")
+      .format(dateFormat);
 
-  const body = {
-    payment: {
-      banking_billet: {
-        expire_at: dayToPay,
-        customer: {
-          name: user.fullName,
-          email: user.email,
-          cpf: user.postalInformation.cpf,
-          birth: user.postalInformation.birth,
-          phone_number: user.postalInformation.phoneNumber,
+    const body = {
+      payment: {
+        banking_billet: {
+          expire_at: dayToPay,
+          customer: {
+            name: user.fullName,
+            email: user.email,
+            cpf: user.postalInformation.cpf,
+            birth: user.postalInformation.birth,
+            phone_number: user.postalInformation.phoneNumber,
+          },
         },
       },
-    },
 
-    items: itemsArray,
-    shippings: [
-      {
-        name: "Default Shipping Cost",
-        value: 100,
-      },
-    ],
-  };
+      items: itemsArray,
+      shippings: [
+        {
+          name: "Default Shipping Cost",
+          value: 100,
+        },
+      ],
+    };
 
-  var gerencianet = new Gerencianet(options);
+    var gerencianet = new Gerencianet(options);
 
-  gerencianet
-    .oneStep([], body)
-    .then(async (response) => {
-      try {
-        const existingOrder = await Order.findOne({ userId });
+    gerencianet
+      .oneStep([], body)
+      .then(async (response) => {
+        try {
+          const existingOrder = await Order.findOne({ userId });
 
-        if (existingOrder) {
-          return res.status(401).json({
-            error: true,
-            message: "Você já tem um pedido em andamento.",
+          if (existingOrder) {
+            return res.status(401).json({
+              error: true,
+              message: "Você já tem um pedido em andamento.",
+            });
+          }
+
+          const newOrder = new Order({
+            userId,
+            userInfo: {
+              userId,
+              name: user.fullName,
+              profileImage: user.profileImage,
+              email: user.email,
+              phoneNumber: user.postalInformation.phoneNumber,
+            },
+            postalInformation: user.postalInformation,
+            products: itemsArray,
+            paymentMethod: "banking-billet",
+            paymentInfo: {
+              expireAt: response.expire_at,
+              link: response.link,
+              chargeId: response.charge_id,
+            },
           });
+          await newOrder.save();
+        } catch (error) {
+          console.log(error);
         }
 
-        const newOrder = new Order({
-          userId,
-          postalInformation: user.postalInformation,
-          products: itemsArray,
-          paymentMethod: "banking-billet",
-          paymentInfo: {
-            expireAt: response.expire_at,
-            link: response.link,
-          },
-        });
-        await newOrder.save();
-      } catch (error) {
-        console.log(error);
-      }
-
-      return res.status(200).json({ error: false, info: response });
-    })
-    .catch(console.log)
-    .done();
+        return res.status(200).json({ error: false, info: response });
+      })
+      .catch(console.log)
+      .done();
+  } catch (error) {
+    return res.status(500).json({ error: true, message: error.message });
+  }
 };
 
 exports.pix = async (req, res) => {
-  const gerencianet = new Gerencianet(options);
+  try {
+    const { userId } = req.userData;
+    const user = await User.findById(userId);
 
-  const params = {
-    id: 1432132,
-  };
+    const existingOrder = await Order.findOne({ userId });
 
-  // gerencianet.detailCharge(params).then(console.log).catch(console.log).done();
+    if (existingOrder) {
+      return res.status(401).json({
+        error: true,
+        message: "Você já tem um pedido em andamento.",
+      });
+    }
 
-  /* let body = {
-    calendario: {
-      expiracao: 3600,
-    },
-    devedor: {
-      cpf: "94271564656",
-      nome: "Gorbadock Oldbuck",
-    },
-    valor: {
-      original: "123.45",
-    },
-    chave: "SUACHAVEPIX", // Informe sua chave Pix cadastrada na Gerencianet
-    infoAdicionais: [
-      {
-        nome: "Pagamento em",
-        valor: "NOME DO SEU ESTABELECIMENTO",
+    const itemsArray = user.cartList.map((product) => ({
+      name: product.productName,
+      value: product.productPrice * 100,
+      amount: product.productAmount,
+    }));
+
+    const totalPrice = user.cartList
+      .map((product) => product.productPrice)
+      .reduce((prev, current) => prev + current, 0)
+      .toFixed(2);
+
+    const gerencianet = new Gerencianet(options);
+
+    let body = {
+      calendario: {
+        expiracao: 3600,
       },
-      {
-        nome: "Pedido",
-        valor: "NUMERO DO PEDIDO DO CLIENTE",
+      devedor: {
+        cpf: user.postalInformation.cpf,
+        nome: user.fullName,
       },
-    ],
-  };
+      valor: {
+        original: totalPrice,
+      },
+      chave: "SUACHAVEPIX", // Informe sua chave Pix cadastrada na Gerencianet
+      infoAdicionais: [
+        {
+          nome: "Pagamento em",
+          valor: "Imagine Laços",
+        },
+      ],
+    };
 
-  let gerencianet = new Gerencianet(options);
+    gerencianet
+      .pixCreateImmediateCharge([], body)
+      .then(async (response) => {
+        console.log("response", response);
+        console.log("loc.id", response.loc.id);
 
-  gerencianet
-    .pixCreateImmediateCharge([], body)
-    .then((response) => console.log(response.loc.id))
-    .catch(console.log)
-    .done();
+        const qrCodeInfo = await gerencianet.pixGenerateQRCode({
+          id: response.loc.id,
+        });
 
-  gerencianet
-    .pixGenerateQRCode({ id: "5" })
-    .then(console.log)
-    .catch(console.log)
-    .done(); */
+        console.log("qr", qrCodeInfo);
+
+        const newOrder = new Order({
+          userId,
+          userInfo: {
+            userId,
+            name: user.fullName,
+            profileImage: user.profileImage,
+            email: user.email,
+            phoneNumber: user.postalInformation.phoneNumber,
+          },
+          postalInformation: user.postalInformation,
+          products: itemsArray,
+          paymentMethod: "pix",
+          paymentInfo: {
+            txId: response.txid,
+            qrCodeInfo,
+          },
+        });
+
+        await newOrder.save();
+      })
+      .catch(console.log)
+      .done();
+
+    /* gerencianet
+      .pixGenerateQRCode({ id: "5" })
+      .then(console.log)
+      .catch(console.log)
+      .done(); */
+  } catch (error) {
+    return res.status(500).json({ error: true, message: error.message });
+  }
 };
