@@ -14,6 +14,18 @@ function ProductCard(props) {
 
   const history = useHistory();
 
+  function renderPlusButton() {
+    if (props.haveInCart === false) {
+      return (
+        <Icon
+          onClick={() => props.addToCart(props.id)}
+          id="add-product-icon"
+          name="plus-button.png"
+        />
+      );
+    }
+  }
+
   return (
     <div
       className={`product-card ${isHovering && "product-card-hover"} ${
@@ -27,11 +39,7 @@ function ProductCard(props) {
           onClick={() => props.remove(props.id)}
         />
       ) : (
-        <Icon
-          onClick={() => props.addToCart(props.id)}
-          id="add-product-icon"
-          name="plus-button.png"
-        />
+        renderPlusButton()
       )}
 
       <div

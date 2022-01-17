@@ -182,10 +182,13 @@ function Home(props) {
                       price={product.price}
                       id={product._id}
                       addToCart={props.addToCart}
+                      haveInCart={props.userData.cartList?.some(
+                        (item) => item.productId === product._id
+                      )}
                     >
                       <img
                         src={product.images[0]}
-                        alt=""
+                        alt={product.name}
                         onClick={() => {
                           history.push(`/produto/${product._id}`);
                           window.scrollTo(0, 0);

@@ -81,3 +81,7 @@ exports.shippingPrice = async (req, res) => {
     console.log(error);
   }
 };
+
+exports.invertCompleted = async (req, res) => {
+  const { orderId } = req.params;
+};

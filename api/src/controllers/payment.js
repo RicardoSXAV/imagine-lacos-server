@@ -26,6 +26,7 @@ exports.status = async (req, res) => {
     const { chargeId } = req.params;
 
     const gerencianet = new Gerencianet(options);
+
     const params = {
       id: chargeId,
     };
@@ -49,7 +50,22 @@ exports.pixStatus = async (req, res) => {
   }
 };
 
-exports.pixQRCode = async (req, res) => {};
+exports.pixQRCode = async (req, res) => {
+  try {
+    const { locId } = req.params;
+    const gerencianet = new Gerencianet(options);
+
+    const qrCodeInfo = await gerencianet.pixGenerateQRCode({
+      id: locId,
+    });
+
+    if (qrCodeInfo) {
+      return res.status(200).json({ error: false, data: qrCodeInfo });
+    }
+  } catch (error) {
+    return res.status(500).json({ error: true, message: error.message });
+  }
+};
 
 exports.creditCard = async (req, res) => {
   try {
@@ -113,8 +129,8 @@ exports.creditCard = async (req, res) => {
         }
 
         const newOrder = new Order({
+          userId,
           userInfo: {
-            userId,
             name: user.fullName,
             profileImage: user.profileImage,
             email: user.email,
@@ -198,7 +214,6 @@ exports.bankingBillet = async (req, res) => {
           const newOrder = new Order({
             userId,
             userInfo: {
-              userId,
               name: user.fullName,
               profileImage: user.profileImage,
               email: user.email,
@@ -265,7 +280,7 @@ exports.pix = async (req, res) => {
       valor: {
         original: totalPrice,
       },
-      chave: "SUACHAVEPIX", // Informe sua chave Pix cadastrada na Gerencianet
+      chave: "e8d0926f-6360-4620-a79a-8f030458f343",
       infoAdicionais: [
         {
           nome: "Pagamento em",
@@ -280,16 +295,15 @@ exports.pix = async (req, res) => {
         console.log("response", response);
         console.log("loc.id", response.loc.id);
 
-        const qrCodeInfo = await gerencianet.pixGenerateQRCode({
+        /* const qrCodeInfo = await gerencianet.pixGenerateQRCode({
           id: response.loc.id,
         });
 
-        console.log("qr", qrCodeInfo);
+        console.log("qr", qrCodeInfo); */
 
         const newOrder = new Order({
           userId,
           userInfo: {
-            userId,
             name: user.fullName,
             profileImage: user.profileImage,
             email: user.email,
@@ -300,7 +314,8 @@ exports.pix = async (req, res) => {
           paymentMethod: "pix",
           paymentInfo: {
             txId: response.txid,
-            qrCodeInfo,
+            locId: response.loc.id,
+            // qrCodeInfo,
           },
         });
 

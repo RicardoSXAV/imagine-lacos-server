@@ -28,6 +28,10 @@ const OrderSchema = new mongoose.Schema(
       type: Array,
       required: true,
     },
+    completed: {
+      type: Boolean,
+      default: false,
+    },
   },
   { timestamps: true }
 );

@@ -9,6 +9,7 @@ const adminAuth = require("../middlewares/adminAuth");
 const order = require("../controllers/order");
 
 router.get("/", adminAuth, order.list);
+router.get("/invert-completed/:orderId", adminAuth, order.invertCompleted);
 router.post("/", userAuth, order.create);
 router.get("/shipping-price", userAuth, order.shippingPrice);
 
