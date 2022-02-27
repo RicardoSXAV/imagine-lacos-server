@@ -5,6 +5,15 @@ import { useHistory } from "react-router";
 import Icon from "../Icon";
 import Button from "../UI/Button";
 import Badge from "../UI/Badge";
+import {
+  barGraph,
+  bowTiePlus,
+  boxWithHeart,
+  emptyCart,
+  fullCart,
+  topLogo,
+  userAvatar,
+} from "../../assets";
 
 function Navbar(props) {
   const history = useHistory();
@@ -24,7 +33,7 @@ function Navbar(props) {
 
     return (
       <Icon
-        name="user-avatar.svg"
+        src={userAvatar}
         onClick={() =>
           history.push(`${props.admin ? "/administrador" : "/usuario"}`)
         }
@@ -35,11 +44,7 @@ function Navbar(props) {
   return (
     <div className="navbar">
       <div className="navbar-box">
-        <Icon
-          name="top-logo.png"
-          id="home-logo"
-          onClick={() => history.push("/")}
-        />
+        <Icon src={topLogo} id="home-logo" onClick={() => history.push("/")} />
 
         {props.homePage && (
           <div className="navbar-buttons">
@@ -54,17 +59,17 @@ function Navbar(props) {
           {props.admin && (
             <>
               <Icon
-                name="bar-graph.svg"
+                src={barGraph}
                 id="navbar-bar-graph"
                 onClick={() => history.push("/estatisticas")}
               />
               <Icon
-                name="bow-tie-plus.svg"
+                src={bowTiePlus}
                 id="navbar-bow-tie-plus"
                 onClick={() => history.push("/produtos")}
               />
               <Icon
-                name="box-with-heart.svg"
+                src={boxWithHeart}
                 onClick={() => history.push("/pedidos")}
               />
             </>
@@ -82,13 +87,13 @@ function Navbar(props) {
             <Badge number={props.userData?.cartList.length}>
               {props.userData?.cartList.length > 0 ? (
                 <Icon
-                  name="full-cart.svg"
+                  src={fullCart}
                   alt="Carrinho cheio"
                   onClick={() => history.push("/carrinho")}
                 />
               ) : (
                 <Icon
-                  name="empty-cart.svg"
+                  src={emptyCart}
                   alt="Carrinho vazio"
                   onClick={() => history.push("/carrinho")}
                 />
