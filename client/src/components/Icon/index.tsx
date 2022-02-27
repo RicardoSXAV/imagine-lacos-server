@@ -1,4 +1,4 @@
-import React, { ReactHTMLElement } from "react";
+import React from "react";
 import "./styles.scss";
 
 function Icon(
@@ -7,7 +7,7 @@ function Icon(
     HTMLImageElement
   >
 ) {
-  return <img className="icon" {...imageProps} />;
+  return <img className="pressable-icon" {...imageProps} />;
 }
 
 export default Icon;
