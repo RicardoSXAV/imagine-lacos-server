@@ -1,6 +1,6 @@
 import "./styles.scss";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useHistory } from "react-router-dom";
 
 import useWindowDimensions from "../../hooks/useWindowDimensions";
@@ -18,7 +18,6 @@ import Carousel from "../../components/UI/Carousel";
 import Input from "../../components/UI/Input";
 import Box from "../../components/UI/Box";
 import Button from "../../components/UI/Button";
-import { useEffect } from "react";
 
 function Home(props) {
   const [showWindow, setShowWindow] = useState(false);
@@ -176,6 +175,7 @@ function Home(props) {
                 <div className="products-list">
                   {props.productList?.map((product) => (
                     <ProductCard
+                      key={product._id}
                       title={product.name}
                       category={product.category}
                       categoryId={product.categoryId}
