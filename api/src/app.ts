@@ -1,10 +1,10 @@
-require("dotenv").config();
+import "dotenv/config";
 
-const express = require("express");
-const mongoose = require("mongoose");
+import express from "express";
+import mongoose from "mongoose";
 
-const cors = require("cors");
-const cookieParser = require("cookie-parser");
+import cors from "cors";
+import cookieParser from "cookie-parser";
 
 const app = express();
 
@@ -21,11 +21,7 @@ app.use(cookieParser());
 app.use("/api/uploads", express.static("src/uploads"));
 
 mongoose
-  .connect(process.env.DB_URL, {
-    useNewUrlParser: true,
-    useCreateIndex: true,
-    useUnifiedTopology: true,
-  })
+  .connect(process.env.DB_URL)
   .then(() => {
     console.log("Connected to the database!");
   })
@@ -33,10 +29,12 @@ mongoose
     console.log(err);
   });
 
-let port = process.env.PORT || 5000;
+const port = process.env.PORT || 5000;
 
 app.listen(port, () =>
   console.log("Server running on http://localhost:" + port + "/")
 );
 
-require("./app.routes")(app);
+import Routes from "./app.routes";
+
+Routes(app);
