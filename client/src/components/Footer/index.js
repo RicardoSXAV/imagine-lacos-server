@@ -12,7 +12,9 @@ function Footer(props) {
 
         <div className="footer-box-row">
           <Icon name="whatsapp.svg" />
-          <Icon name="instagram.svg" />
+          <a href="https://instagram.com/imagine_lacos">
+            <Icon name="instagram.svg" />
+          </a>
         </div>
       </div>
 

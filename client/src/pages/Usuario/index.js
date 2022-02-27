@@ -13,19 +13,21 @@ import Input from "../../components/UI/Input";
 import zipcodeFormat from "../../utils/zipcodeFormat";
 import AddPostalInformation from "../../components/Forms/AddPostalInformation";
 import { useEffect } from "react";
+import UserOrderList from "../../components/UserOrderList";
 
 function Usuario(props) {
   const [showAddWindow, setShowAddWindow] = useState(false);
   const [showEditWindow, setShowEditWindow] = useState(false);
+  const [showUserOrderList, setShowUserOrderList] = useState(false);
   const [showHelpPopup, setShowHelpPopup] = useState(false);
 
   useEffect(() => {
-    if (showHelpPopup === true) {
+    if (showHelpPopup || showUserOrderList) {
       document.body.style.overflowY = "hidden";
     } else {
       document.body.style.overflowY = "auto";
     }
-  }, [showHelpPopup]);
+  }, [showHelpPopup, showUserOrderList]);
 
   const [street, setStreet] = useState("");
   const [number, setNumber] = useState("");
@@ -92,6 +94,11 @@ function Usuario(props) {
 
   return (
     <>
+      <UserOrderList
+        showUserOrderList={showUserOrderList}
+        setShowUserOrderList={setShowUserOrderList}
+      />
+
       <Popup
         id="help-popup"
         showPopup={showHelpPopup}
@@ -214,6 +221,7 @@ function Usuario(props) {
                     />
                   )}
                   <img
+                    alt="User profile"
                     src={props.userData.profileImage.replace("s96-c", "s394-c")}
                   />
                 </button>
@@ -286,7 +294,10 @@ function Usuario(props) {
             <div className="user-options-box">
               <div className="user-options-icons">
                 <div className="flex-wrapper-column">
-                  <div className="user-options-icon-box">
+                  <div
+                    className="user-options-icon-box"
+                    onClick={() => setShowUserOrderList(true)}
+                  >
                     <Image name="shopping-bag.png" />
                   </div>
                   <h3>Pedidos</h3>

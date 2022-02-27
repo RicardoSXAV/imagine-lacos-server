@@ -41,6 +41,18 @@ exports.list = async (req, res) => {
   }
 };
 
+exports.getUserOrders = async (req, res) => {
+  try {
+    const { userId } = req.userData;
+
+    const orderList = await Order.find({ userId });
+
+    return res.status(200).json({ error: false, orders: orderList });
+  } catch (error) {
+    return res.status(500).json({ error: true, message: error.message });
+  }
+};
+
 exports.create = async (req, res) => {
   const { userId } = req.userData;
 
@@ -83,5 +95,22 @@ exports.shippingPrice = async (req, res) => {
 };
 
 exports.invertCompleted = async (req, res) => {
-  const { orderId } = req.params;
+  try {
+    const { orderId } = req.params;
+
+    const order = await Order.findById(orderId);
+
+    if (!order) {
+      return res
+        .status(401)
+        .json({ error: true, message: "Não foi possível encontrar o pedido!" });
+    }
+
+    order.completed = !order.completed;
+    await order.save();
+
+    res.status(200).json({});
+  } catch (error) {
+    return res.status(500).json({ error: true, message: error.message });
+  }
 };

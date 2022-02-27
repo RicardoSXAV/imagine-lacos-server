@@ -7,6 +7,8 @@ const moment = require("moment");
 const User = require("../models/User");
 const Order = require("../models/Order");
 
+const { getShippingCost } = require("../utils/getShippingCost");
+
 const options = {
   sandbox: true,
 
@@ -73,6 +75,15 @@ exports.creditCard = async (req, res) => {
     const { userId } = req.userData;
 
     const user = await User.findById(userId);
+    const shippingPrice = await getShippingCost(user.postalInformation.zipcode);
+
+    if (shippingPrice.error) {
+      return res.status(500).json({
+        error: true,
+        message: "Erro ao processar o frete.",
+      });
+    }
+
     const billingAdress = {
       street: user.postalInformation.street,
       number: user.postalInformation.number,
@@ -109,7 +120,7 @@ exports.creditCard = async (req, res) => {
       shippings: [
         {
           name: "Default Shipping Cost",
-          value: 100,
+          value: Math.ceil(shippingPrice * 100),
         },
       ],
     };
@@ -158,6 +169,15 @@ exports.bankingBillet = async (req, res) => {
   try {
     const { userId } = req.userData;
     const user = await User.findById(userId);
+    const shippingPrice = await getShippingCost(user.postalInformation.zipcode);
+
+    if (shippingPrice.error) {
+      return res.status(500).json({
+        error: true,
+        message: "Erro ao processar o frete.",
+      });
+    }
+
     const itemsArray = user.cartList.map((product) => ({
       name: product.productName,
       value: product.productPrice * 100,
@@ -191,12 +211,12 @@ exports.bankingBillet = async (req, res) => {
       shippings: [
         {
           name: "Default Shipping Cost",
-          value: 100,
+          value: Math.ceil(shippingPrice * 100),
         },
       ],
     };
 
-    var gerencianet = new Gerencianet(options);
+    const gerencianet = new Gerencianet(options);
 
     gerencianet
       .oneStep([], body)
