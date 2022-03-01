@@ -1,7 +1,7 @@
 {
   "compilerOptions": {
     "target": "es6",
-    "types": ["node", "jest", "@testing-library/jest-dom"],
+    "types": ["node", "jest"],
     "esModuleInterop": true,
     "allowJs": true,
     "skipLibCheck": true,
