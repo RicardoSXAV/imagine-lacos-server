@@ -1,7 +1,7 @@
 {
   "name": "imagine-lacos-server",
   "version": "1.0.0",
-  "main": "dist/app.js",
+  "main": "app.ts",
   "author": "Ricardo dos Santos",
   "license": "ISC",
   "scripts": {
