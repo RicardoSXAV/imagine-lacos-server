@@ -5,7 +5,8 @@
   "author": "Ricardo dos Santos",
   "license": "ISC",
   "scripts": {
-    "start": "ts-node-dev ./src/app.ts",
+    "dev": "ts-node-dev ./src/app.ts",
+    "start": "node ./dist/app.js",
     "build": "tsc",
     "test": "jest",
     "test:watch": "yarn test --watch"
