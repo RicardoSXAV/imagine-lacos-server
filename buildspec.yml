@@ -13,6 +13,7 @@ phases:
       - npm run build
     post_build:
       - echo Build completed
+      - ls
 artifacts:
   files:
     - dist/**/*
