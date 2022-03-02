@@ -8,11 +8,16 @@ phases:
     commands:
       - echo Installing packages
       - npm install
-    build:
+  build:
+    commands:
       - echo Creating build
       - npm run build
-    post_build:
+  post_build:
+    commands:
       - echo Build completed
 artifacts:
   files:
-    - "**/*"
+    - dist/**/*
+    - package.json
+    - package-lock.json
+    - node_modules/**/*
