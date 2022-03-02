@@ -9,9 +9,11 @@ phases:
       - echo Creating build
       - npm run build
     post_build:
-      - echo Prepare artifact
-      - npm run dist
+      - echo Removing unnecessary files
+      - rm -rf node_modules/
 artifacts:
-  base-directory: "."
+  type: zip
   files:
-    - "**/*"
+    - package.json
+    - package-lock.json
+    - "dist/**/*"
