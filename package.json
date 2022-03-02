@@ -1,5 +1,5 @@
 {
-  "name": "imagine-lacos-api",
+  "name": "imagine-lacos-server",
   "version": "1.0.0",
   "main": "app.ts",
   "author": "Ricardo dos Santos",
@@ -8,6 +8,7 @@
     "dev": "ts-node-dev ./src/app.ts",
     "start": "node ./dist/app.js",
     "build": "tsc",
+    "dist": "sh ./scripts/dist.sh",
     "test": "jest",
     "test:watch": "yarn test --watch"
   },
