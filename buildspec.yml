@@ -1,6 +1,9 @@
 version: 0.2
 
 phases:
+  install:
+    commands:
+      - npm install -g typescript
   pre_build:
     commands:
       - echo Installing packages
@@ -9,11 +12,10 @@ phases:
       - echo Creating build
       - npm run build
     post_build:
-      - echo Removing unnecessary files
-      - rm -rf node_modules/
+      - echo Build completed
 artifacts:
-  type: zip
   files:
+    - dist/**/*
     - package.json
     - package-lock.json
-    - "dist/**/*"
+    - node_modules/**/*
