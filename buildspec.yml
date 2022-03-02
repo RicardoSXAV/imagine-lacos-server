@@ -13,10 +13,6 @@ phases:
       - npm run build
     post_build:
       - echo Build completed
-      - ls
 artifacts:
   files:
-    - dist/**/*
-    - package.json
-    - package-lock.json
-    - node_modules/**/*
+    - "**/*"
