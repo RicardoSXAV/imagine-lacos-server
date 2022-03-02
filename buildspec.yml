@@ -8,9 +8,6 @@ phases:
     build:
       - echo Creating build
       - npm run build
-    post_build:
-      - echo Removing unnecessary files
-      - rm -rf node_modules/
 artifacts:
   base-directory: "."
   files:
